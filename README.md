@@ -311,7 +311,6 @@ fn main() {
 module main
 
 import net.http { Server, Handler, Request, Response }
-import khalyomede.mime { Mime }
 import os
 
 struct RequestHandler implements Handler {}
