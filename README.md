@@ -68,6 +68,7 @@ v install khalyomede.http
         - [Get all queries](#get-all-queries)
     - Body
         - [Get an uploade file](#get-an-uploaded-file)
+        - [Get all files](#get-all-files)
         - [Get a body by key](#get-a-body-by-key)
         - [Get all body](#get-all-body)
     - Headers
@@ -325,6 +326,37 @@ fn (request_handler RequestHandler) handle(request Request) Response {
   }
 
   return web.Response.html(content: "<h1>Profile picture updated</h1>").to_base()
+}
+
+fn main() {
+  mut server := Server{
+    addr: "localhost:80"
+    handler: RequestHandler{}
+  }
+
+  server.listen_and_serve()
+}
+```
+
+[back to examples](#examples)
+
+### Get all files
+
+```v
+module main
+
+import net.http { Server, Handler, Request, Response }
+
+struct RequestHandler implements Handler {}
+
+fn (request_handler RequestHandler) handle(request Request) Response {
+  request := web.Request.from_base(request)
+
+  for file in request.files() {
+    // ...
+  }
+
+  return web.Response.html(content: "<h1>Pictures saved</h1>").to_base()
 }
 
 fn main() {
