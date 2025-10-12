@@ -6,3 +6,6 @@ services:
     working_dir: /root/app
     volumes:
       - .:/root/app
+      - ./docker-data/v/.vmodules:/root/.vmodules
+    ports:
+      - "80:80"
