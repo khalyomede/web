@@ -112,6 +112,14 @@ fn main() {
 }
 ```
 
+Note that the return type will be an `Address` union type (which can be an `Ipv4` or `Ipv6` struct). See [khalyomede/ip](https://github.com/khalyomede/ip) for more information.
+
+**Important notice**: For the moment, this method does not handle Proxies. For example, if your web server is behind a Cloudflare or Nginx Proxy, this method will always return the Proxy IP (and not the client IP). Instead, these proxy return the client IP in a specific header (which may change, hence the fact that for simplciity this method only returns the client IP in non-proxy situation).
+
+For the moment, it is up to you to get the client IP using the proper [`Request.header()`](#get-a-specific-header) method.
+
+In a future update, this package will allow you to declare a proxy configuration, such as calling `Request.ip()` will return the client IP as expect.
+
 [back to examples](#examples)
 
 ### Get the path
