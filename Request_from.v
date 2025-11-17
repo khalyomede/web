@@ -6,5 +6,6 @@ pub fn Request.from(base_request http.Request) Request {
     return Request{
         method: base_request.method
         url: base_request.url
+        base_request: base_request
     }
 }
