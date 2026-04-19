@@ -2,6 +2,9 @@ module web
 
 import net.http { Method }
 
+/**
+  @todo Just use struct inheritance.
+**/
 pub struct Request {
     pub:
         method Method
