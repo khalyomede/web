@@ -124,6 +124,9 @@ In a future update, this package will allow you to declare a proxy configuration
 
 ### Get the path
 
+> [!INFO]
+> Install [khalyomede/url](https://github.com/khalyomede/url) to use this method.
+
 ```v
 module main
 
