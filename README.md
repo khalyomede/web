@@ -256,6 +256,9 @@ fn main() {
 
 ### Get a query string by key
 
+> [!INFO]
+> Install [khalyomede/url](https://github.com/khalyomede/url) to use this method.
+
 ```v
 module main
 
@@ -282,9 +285,82 @@ fn main() {
 }
 ```
 
+`Request.query()` returns a `QueryNotFound` error when the query is not found, so you can handle this specific case.
+
+```v
+module main
+
+import khalyomede.web { QueryNotFound }
+import net.http { Server, Handler, Request, Response }
+
+struct RequestHandler implements Handler {}
+
+fn (request_handler RequestHandler) handle(base_request Request) Response {
+  request := web.Request.from_base(base_request)
+
+  theme := match request.query("theme") or {
+    match err {
+      QueryNotFound { "light" }
+      else { "none" }
+    }
+  }
+
+  return web.Response.html(content: "<h1>Hello world</h1>").to_base()
+}
+
+fn main() {
+  mut server := Server{
+    addr: "localhost:80"
+    handler: RequestHandler{}
+  }
+
+  server.listen_and_serve()
+}
+```
+
+This package uses [khalyomede/url](https://github.com/khalyomede/url) to parse the path and access the query. You should check the errors to exhaustively match them.
+
+```v
+module main
+
+import khalyomede.web { QueryNotFound }
+import khalyomede.url { BadlyEncodedQuery }
+import net.http { Server, Handler, Request, Response }
+
+struct RequestHandler implements Handler {}
+
+fn (request_handler RequestHandler) handle(base_request Request) Response {
+  request := web.Request.from_base(base_request)
+
+  theme := match request.query("theme") or {
+    match err {
+      QueryNotFound { "light" }
+      BadlyEncodedQuery { "dark" }
+      else { "none" }
+    }
+  }
+
+  return web.Response.html(content: "<h1>Hello world</h1>").to_base()
+}
+
+fn main() {
+  mut server := Server{
+    addr: "localhost:80"
+    handler: RequestHandler{}
+  }
+
+  server.listen_and_serve()
+}
+```
+
+You can find the full list on the [parse URL method documentation of khalyomede/url](https://github.com/khalyomede/url#parse-an-url).
+
 [back to examples](#examples)
 
 ### Get all queries
+
+> [!INFO]
+> Install [khalyomede/url](https://github.com/khalyomede/url) to use this method.
 
 ```v
 module main
