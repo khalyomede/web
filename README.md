@@ -49,7 +49,7 @@ This packages creates from and returns `net.http` `Request` and `Response` struc
 Install the required packages:
 
 ```bash
-v install khalyomede.http
+v install khalyomede.web
 ```
 
 ### Manual installation
