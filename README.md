@@ -139,7 +139,7 @@ fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
   url := request.url // "/contact?theme=dark#whatsapp"
-  path := request.path() // "contact"
+  path := request.path() // "/contact"
 
   return web.Response.html(content: "<h1>Hello world</h1>").to_base()
 }
