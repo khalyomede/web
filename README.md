@@ -67,7 +67,8 @@ v install khalyomede.web
         - [Get a query string by key](#get-a-query-string-by-key)
         - [Get all queries](#get-all-queries)
     - Body
-        - [Get an uploade file](#get-an-uploaded-file)
+        - [Get an uploaded file](#get-an-uploaded-file)
+        - [Get all files for a key](#get-all-files-for-a-key)
         - [Get all files](#get-all-files)
         - [Get a body by key](#get-a-body-by-key)
         - [Get all body](#get-all-body)
@@ -392,7 +393,13 @@ fn main() {
 
 [back to examples](#examples)
 
-### Get an uploade file
+### Get an uploaded file
+
+Given you have an HTML form with `multipart/form-data` enctype, this package will let you get a single file matching the same `name` attribute as specified in your `<input type="file">` in your HTML.
+
+The method `web.Request.file(name)` will return a V built-in [`FileData`](https://modules.vlang.io/net.http.html#FileData).
+
+This method will return the **first** file. If you allow multiple files, use the [`web.Request.files(name)`](#get-multiple-uploaded-files) instead.
 
 ```v
 module main
@@ -405,10 +412,29 @@ struct RequestHandler implements Handler {}
 fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
-  file := request.file()
+  // GET /upload-profile-picture
+  if request.path() == '/upload-profile-picture' {
+    return web.Response.html(content: "
+      <form method="POST" action="validate-profile-picture" enctype="multipart/form-data">
+        <input type="file" name="profilePicture" />
+        <button type="submit">upload</button>
+      </form>
+    ")
+  }
 
-  os.write_file(file.name, file.content) or {
-    return web.Response.html(content: "<h1>Error</h1>", status: .internal_server_error)
+  // GET /validate-upload
+  file := request.file('profilePicture') or {
+    return web.Response.html(
+      content: "<h1>Unable to download profile picture</h1>"
+      status: .internal_server_error
+    )
+  }
+
+  os.write_file(file.filename, file.data) or {
+    return web.Response.html(
+      content: "<h1>Unable to save file on the server.</h1>",
+      status: .internal_server_error
+    )
   }
 
   return web.Response.html(content: "<h1>Profile picture updated</h1>").to_base()
@@ -426,23 +452,103 @@ fn main() {
 
 [back to examples](#examples)
 
-### Get all files
+### Get all files for a key
+
+If your HTML form accepts multiples files for a given `<input type="file" name="documents" multiple />`, use the `web.Request.files('documents')` method.
+
+If you only need a single file (the first one), use the [`web.Request.file()`](#get-an-uploaded-file) method instead.
 
 ```v
 module main
 
 import net.http { Server, Handler, Request, Response }
+import os
 
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
-  for file in request.files() {
-    // ...
+  // GET /upload-documents
+  if request.path() == '/upload-documents' {
+    return web.Response.html(content: "
+      <form method="POST" action="validate-documents" enctype="multipart/form-data">
+        <input type="file" name="documents" multiple />
+        <button type="submit">upload</button>
+      </form>
+    ")
   }
 
-  return web.Response.html(content: "<h1>Pictures saved</h1>").to_base()
+  // GET /validate-documents
+  files := request.files('documents') or {
+    return web.Response.html(
+      content: "<h1>Unable to download documents</h1>"
+      status: .internal_server_error
+    )
+  }
+
+  for file in files {
+    os.write_file(file.filename, file.data) or {
+      return web.Response.html(
+        content: "<h1>Unable to save document on the server.</h1>",
+        status: .internal_server_error
+      )
+    }
+  }
+
+  return web.Response.html(content: "<h1>Documents updated</h1>").to_base()
+}
+
+fn main() {
+  mut server := Server{
+    addr: "localhost:80"
+    handler: RequestHandler{}
+  }
+
+  server.listen_and_serve()
+}
+```
+
+[back to examples](#examples)
+
+### Get all files
+
+When you do not care from which `<input type="file" />` the files are coming, and you want to get every files uploaded across the whole HTML forms, use the `web.Request.all_files()` method.
+
+```v
+module main
+
+import net.http { Server, Handler, Request, Response }
+import os
+
+struct RequestHandler implements Handler {}
+
+fn (request_handler RequestHandler) handle(base_request Request) Response {
+  request := web.Request.from_base(base_request)
+
+  // GET /upload-documents
+  if request.path() == '/upload-documents' {
+    return web.Response.html(content: "
+      <form method="POST" action="validate-documents" enctype="multipart/form-data">
+        <input type="file" name="documents" multiple />
+        <button type="submit">upload</button>
+      </form>
+    ")
+  }
+
+  // GET /validate-documents
+  files := request.all_files()
+
+  for file in files {
+    os.write_file(file.filename, file.data) or {
+      return web.Response.html(
+        content: "<h1>Unable to save document on the server.</h1>",
+        status: .internal_server_error
+      )
+    }
+  }
+
+  return web.Response.html(content: "<h1>Documents updated</h1>").to_base()
 }
 
 fn main() {
