@@ -712,7 +712,34 @@ struct RequestHandler implements Handler {}
 fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
-  client_hints := request.header("Accept-CH")
+  client_id := request.header(key: "X-Client-Id")
+
+  return web.Response.html(content: "<h1>Hello world</h1>").to_base()
+}
+
+fn main() {
+  mut server := Server{
+    addr: "localhost:80"
+    handler: RequestHandler{}
+  }
+
+  server.listen_and_serve()
+}
+```
+
+You can also use a `net.http.CommonHeader` for more type-safety:
+
+```v
+module main
+
+import net.http { CommonHeader, Server, Handler, Request, Response }
+
+struct RequestHandler implements Handler {}
+
+fn (request_handler RequestHandler) handle(base_request Request) Response {
+  request := web.Request.from_base(base_request)
+
+  forwarded_host := request.header(key: CommonHeader.x_forwarded_host)
 
   return web.Response.html(content: "<h1>Hello world</h1>").to_base()
 }
