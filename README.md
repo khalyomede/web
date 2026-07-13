@@ -651,7 +651,7 @@ struct RequestHandler implements Handler {}
 fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
-  email := request.body("email") or { "" }
+  email := request.body(key: "email") or { "" }
 
   return web.Response.html(content: "<h1>Settings updated</h1>").to_base()
 }
@@ -681,7 +681,7 @@ struct RequestHandler implements Handler {}
 fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
-  for key, value in request.bodies() {
+  for key, value in request.all_body() {
     // ...
   }
 
@@ -1010,3 +1010,8 @@ fn main() {
 ```
 
 [back to examples](#examples)
+
+## Todo
+
+- [ ] Save body/multipart body in a mutable private item to prevent re-computing on subsequent access
+- [ ] Have the list of files/file returns by Request.all_files()/Request.files()/Request.file() buffered (by parsing the raw header and streaming the content to temporary files?)
