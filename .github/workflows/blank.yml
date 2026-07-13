@@ -25,4 +25,17 @@ jobs:
         run: docker compose run --rm v install khalyomede.expect khalyomede.faker khalyomede.url khalyomede.ip khalyomede.mime
 
       - name: Tests (latest)
-        run: docker compose run --rm v -N -W test .
+        run: docker compose run --rm v -N -W test ./*.v
+
+  test_0_5_1:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: docker compose run --rm v051 install khalyomede.expect khalyomede.faker khalyomede.url khalyomede.ip khalyomede.mime
+
+      - name: Tests (latest)
+        run: docker compose run --rm v051 -N -W test ./*.v
+

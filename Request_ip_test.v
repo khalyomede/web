@@ -4,7 +4,7 @@ import khalyomede.faker { Faker }
 import khalyomede.expect { expect }
 import khalyomede.ip { Address, Ipv4, Ipv6 }
 import net.http { Request, Header }
-import web
+import web { HeaderNotFound }
 
 fn test_it_can_get_ip_v4_from_request() {
     mut fake := Faker{}
@@ -48,4 +48,27 @@ fn test_it_can_get_ip_v6_from_request() {
     }
 
     expect(actual.str()).to_be_equal_to(expected)
+}
+
+fn test_it_returns_header_not_found_error_when_header_not_present() {
+    request := web.Request.from(Request{
+        header: Header{}
+    })
+
+    mut error_matched := false
+
+    address := request.ip() or {
+        match err {
+            HeaderNotFound {
+                error_matched = err.msg() == 'Header "RemoteAddr" not found.'
+            }
+            else {
+                error_matched = false
+            }
+        }
+
+        Address(Ipv4{})
+    }
+
+    expect(error_matched).to_be_true()
 }

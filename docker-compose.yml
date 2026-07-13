@@ -9,3 +9,13 @@ services:
       - ./docker-data/v/.vmodules:/root/.vmodules
     ports:
       - "80:80"
+
+  v051:
+    image: khalyomede/vlang:0.5.1-alpine
+    entrypoint: v
+    user: root
+    working_dir: /root/app
+    volumes:
+      - .:/root/app
+      - ./docker-data/v/.vmodules:/root/.vmodules
+

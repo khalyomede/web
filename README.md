@@ -59,6 +59,8 @@ v install khalyomede.web
 - Request
     - [Get the client IP](#get-the-client-ip)
     - [Get list of accepted content type](#get-list-of-accepted-content-type)
+    - [Check if the client accepts a specific content type](#check-if-the-client-accepts-a-specific-content-type)
+    - [Get the content type](#get-the-content-type)
     - [Get the path](#get-the-path)
     - Cookies
       - [Get a cookie by key](#get-a-cookie-by-key)
@@ -67,11 +69,12 @@ v install khalyomede.web
         - [Get a query string by key](#get-a-query-string-by-key)
         - [Get all queries](#get-all-queries)
     - Body
+      - [Get a body by key](#get-a-body-by-key)
+      - [Get all body](#get-all-body)
+      - File
         - [Get an uploaded file](#get-an-uploaded-file)
         - [Get all files for a key](#get-all-files-for-a-key)
         - [Get all files](#get-all-files)
-        - [Get a body by key](#get-a-body-by-key)
-        - [Get all body](#get-all-body)
     - Headers
       - [Get a specific header](#get-a-specific-header)
       - [Get the bearer token](#get-the-bearer-token)
@@ -98,7 +101,9 @@ struct RequestHandler implements Handler {}
 fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
-  ip := request.ip()
+  ip := request.ip() or {
+    return web.Response.html(content: "<h1>Unable to find your IP.</h1>", status: .server_error)
+  }
 
   return web.Response.html(content: "<h1>Hello world</h1>").to_base()
 }
@@ -113,9 +118,9 @@ fn main() {
 }
 ```
 
-Note that the return type will be an `Address` union type (which can be an `Ipv4` or `Ipv6` struct). See [khalyomede/ip](https://github.com/khalyomede/ip) for more information.
+Note that the return type will be an `!Address` union type (which can be an `Ipv4` or `Ipv6` struct). See [khalyomede/ip](https://github.com/khalyomede/ip) for more information.
 
-**Important notice**: For the moment, this method does not handle Proxies. For example, if your web server is behind a Cloudflare or Nginx Proxy, this method will always return the Proxy IP (and not the client IP). Instead, these proxy return the client IP in a specific header (which may change, hence the fact that for simplciity this method only returns the client IP in non-proxy situation).
+**Important notice**: For the moment, this method does not handle Proxies. For example, if your web server is behind a Cloudflare or Nginx Proxy, this method will always return the Proxy IP (and not the client IP). Instead, these proxy return the client IP in a specific header (which may change, hence the fact that for simplicity this method only returns the client IP in non-proxy situation).
 
 For the moment, it is up to you to get the client IP using the proper [`Request.header()`](#get-a-specific-header) method.
 
@@ -179,6 +184,74 @@ fn (request_handler RequestHandler) handle(base_request Request) Response {
   }
 
   return web.Response.text(content: "Hello world").to_base()
+}
+
+fn main() {
+  mut server := Server{
+    addr: "localhost:80"
+    handler: RequestHandler{}
+  }
+
+  server.listen_and_serve()
+}
+```
+
+[back to examples](#examples)
+
+### Check if the client accepts a specific content type
+
+This method needs you to install the module `khalyomede.mime`. Learn more on the [documentation](https://github.com/khalyomede/mime).
+
+```v
+module main
+
+import khalyomede.web
+import net.http { Server, Handler, Request, Response }
+
+struct RequestHandler implements Handler {}
+
+fn (request_handler RequestHandler) handle(base_request Request) Response {
+  request := Request.from_base(request)
+
+  return match request.accepts(.text_html) {
+    true { web.Response.html(content: "<h1>Hello world</h1>") }
+    false { web.Response.text(content: "Hello world") }
+  }
+}
+
+fn main() {
+  mut server := Server{
+    addr: "localhost:80"
+    handler: RequestHandler{}
+  }
+
+  server.listen_and_serve()
+}
+```
+
+[back to examples](#examples)
+
+### Get the content type
+
+This methods needs you to install `khalyomede.mime`. It will return a `Mime` struct. Learn more on the [documentation](https://github.com/khalyomede/mime).
+
+```v
+module main
+
+import khalyomede.web
+import net.http { Server, Handler, Request, Response }
+
+struct RequestHandler implements Handler {}
+
+fn (request_handler RequestHandler) handle(base_request Request) Response {
+  request := Request.from_base(request)
+
+  type = match request.content_type() {
+    .text_html { "html" }
+    else { "world" }
+  }
+
+  return web.Response.html(content: "<h1>Hello ${type}</h1>")
 }
 
 fn main() {
@@ -397,7 +470,7 @@ fn main() {
 
 Given you have an HTML form with `multipart/form-data` enctype, this package will let you get a single file matching the same `name` attribute as specified in your `<input type="file">` in your HTML.
 
-The method `web.Request.file(name)` will return a V built-in [`FileData`](https://modules.vlang.io/net.http.html#FileData).
+The method `web.Request.file(name: "file")` will return a V built-in [`FileData`](https://modules.vlang.io/net.http.html#FileData).
 
 This method will return the **first** file. If you allow multiple files, use the [`web.Request.files(name)`](#get-multiple-uploaded-files) instead.
 
@@ -423,7 +496,7 @@ fn (request_handler RequestHandler) handle(base_request Request) Response {
   }
 
   // GET /validate-upload
-  file := request.file('profilePicture') or {
+  file := request.file(name: "profilePicture") or {
     return web.Response.html(
       content: "<h1>Unable to download profile picture</h1>"
       status: .internal_server_error
@@ -480,10 +553,12 @@ fn (request_handler RequestHandler) handle(base_request Request) Response {
   }
 
   // GET /validate-documents
-  files := request.files('documents') or {
+  files := request.files(name: "documents")
+
+  if files.len == 0 {
     return web.Response.html(
-      content: "<h1>Unable to download documents</h1>"
-      status: .internal_server_error
+      content: "<h1>No document found</h1>"
+      status: .bad_request
     )
   }
 
