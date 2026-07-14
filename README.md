@@ -76,13 +76,13 @@ v install khalyomede.web
         - [Get all files for a key](#get-all-files-for-a-key)
         - [Get all files](#get-all-files)
     - Headers
+      - [Get all headers](#get-all-headers)
       - [Get a specific header](#get-a-specific-header)
       - [Get the bearer token](#get-the-bearer-token)
       - [Get basic auth username password](#get-basic-auth-username-password)
       - [Get the user agent](#get-the-user-agent)
       - [Get the first support language](#get-the-first-supported-language)
       - [Get all supported languages](#get-all-supported-languages)
-      - [Get all headers](#get-all-headers)
 - Response
   - [Return basic response](#return-basic-response)
   - [Return HTML response](#return-html-response)
@@ -700,6 +700,37 @@ fn main() {
 
 [back to examples](#examples)
 
+### Get all headers
+
+```v
+module main
+
+import net.http { Server, Handler, Request, Response, Status }
+
+struct RequestHandler implements Handler {}
+
+fn (request_handler RequestHandler) handle(base_request Request) Response {
+  request := web.Request.from_base(base_request)
+
+  for key, value in request.headers() {
+    // ...
+  }
+
+  return web.Response.html(content: "<h1>Hello world</h1>").to_base()
+}
+
+fn main() {
+  mut server := Server{
+    addr: "localhost:80"
+    handler: RequestHandler{}
+  }
+
+  server.listen_and_serve()
+}
+```
+
+[back to examples](#examples)
+
 ### Get a specific header
 
 ```v
@@ -895,37 +926,6 @@ fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
   languages := request.languages() or { [Lang.en] }
-
-  return web.Response.html(content: "<h1>Hello world</h1>").to_base()
-}
-
-fn main() {
-  mut server := Server{
-    addr: "localhost:80"
-    handler: RequestHandler{}
-  }
-
-  server.listen_and_serve()
-}
-```
-
-[back to examples](#examples)
-
-### Get all headers
-
-```v
-module main
-
-import net.http { Server, Handler, Request, Response, Status }
-
-struct RequestHandler implements Handler {}
-
-fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
-
-  for key, value in request.headers() {
-    // ...
-  }
 
   return web.Response.html(content: "<h1>Hello world</h1>").to_base()
 }
