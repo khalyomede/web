@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: docker compose run --rm v install khalyomede.expect khalyomede.faker khalyomede.url khalyomede.ip khalyomede.mime
+        run: docker compose run --rm v install khalyomede.expect khalyomede.faker khalyomede.url khalyomede.ip khalyomede.mime khalyomede.lang
 
       - name: Tests (latest)
         run: docker compose run --rm v -N -W test ./*.v
@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: docker compose run --rm v051 install khalyomede.expect khalyomede.faker khalyomede.url khalyomede.ip khalyomede.mime
+        run: docker compose run --rm v051 install khalyomede.expect khalyomede.faker khalyomede.url khalyomede.ip khalyomede.mime khalyomede.lang
 
       - name: Tests (latest)
         run: docker compose run --rm v051 -N -W test ./*.v
