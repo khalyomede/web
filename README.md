@@ -925,7 +925,7 @@ struct RequestHandler implements Handler {}
 fn (request_handler RequestHandler) handle(base_request Request) Response {
   request := web.Request.from_base(base_request)
 
-  languages := request.languages() or { [Lang.en] }
+  languages := request.languages()
 
   return web.Response.html(content: "<h1>Hello world</h1>").to_base()
 }

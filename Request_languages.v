@@ -1,13 +1,15 @@
 module web
 
 import khalyomede.lang { Lang }
+import net.http { CommonHeader }
 import strconv { atof64 }
 
-/**
-    @todo make a package?
-**/
-fn parse_accepted_languages(header string) []AcceptedLanguage {
-	mut accepted := []AcceptedLanguage{}
+pub fn (request Request) languages() []Lang {
+    header := request.header(key: CommonHeader.accept_language) or {
+        return []
+    }
+
+    mut accepted := []AcceptedLanguage{}
 
 	// e.g. "en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7" -> ["en-US", "en;q=0.9", "fr-FR;q=0.8", "fr;q=0.7"]
 	for raw_part in header.split(',') {
@@ -21,7 +23,7 @@ fn parse_accepted_languages(header string) []AcceptedLanguage {
 		sub_parts := part.split(';')
 		language_part := sub_parts[0].trim_space() // e.g. "fr-FR", "en", "*"
 
-		mut priority := f64(1.0)
+		mut priority := f64(0.0)
 
 		for sub_part in sub_parts[1..] {
 			trimmed_sub_part := sub_part.trim_space()
@@ -70,5 +72,15 @@ fn parse_accepted_languages(header string) []AcceptedLanguage {
 
 	accepted.sort(a.priority > b.priority)
 
-	return accepted
+    mut languages := []Lang{}
+
+    for item in accepted {
+        if languages.contains(item.lang) {
+            continue
+        }
+
+        languages << item.lang
+    }
+
+    return languages
 }
