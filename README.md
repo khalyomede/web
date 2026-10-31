@@ -949,7 +949,7 @@ This example requires the `Mime` enum. See [khalyomede/mime](https://github.com/
 ```v
 module main
 
-import net.http { Server, Handler, Request, Response, CommonHeader }
+import net.http { Server, Handler, Request, Response, CommonHeader, Status }
 import khalyomede.mime { Mime }
 
 struct RequestHandler implements Handler {}
@@ -958,10 +958,11 @@ fn (request_handler RequestHandler) handle(base_request Request) Response {
   return khalyomede
     .http
     .Response(
-      content: "<h1>Hello world</h1>"
+      body: "<h1>Hello world</h1>"
       headers: {
         CommonHeader.content_type.str(): Mime.text_html.str()
       }
+      status_code: Status.ok.int()
     )
     .to_base()
 }
