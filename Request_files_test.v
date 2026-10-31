@@ -12,7 +12,7 @@ fn test_it_can_get_all_txt_files_uploaded_for_a_multiple_select_with_specific_na
     second_file_content := fake.sentence()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(
@@ -65,7 +65,7 @@ fn test_it_get_no_files_when_no_one_match_file_name() {
     second_file_content := fake.sentence()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(
@@ -102,7 +102,7 @@ Content-Type: application/json
 
 fn test_it_get_no_files_when_there_is_none() {
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(key: .content_type, value: Mime.application_json.str())

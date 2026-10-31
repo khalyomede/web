@@ -1,7 +1,7 @@
 module web
 
 pub fn (request Request) cookies() map[string]string {
-    raw_cookie_value := request.base_request.header.get(.cookie) or {
+    raw_cookie_value := request.header.get(.cookie) or {
         return map[string]string{}
     }
 

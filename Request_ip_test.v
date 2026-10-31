@@ -13,11 +13,11 @@ fn test_it_can_get_ip_v4_from_request() {
 
     header.set_custom('RemoteAddr', expected)!
 
-    base_request := Request{
-        header: header
+    request := web.Request{
+        Request{
+            header: header
+        }
     }
-
-    request := web.Request.from(base_request)
     request_ip := request.ip()!
 
     actual := match request_ip {
@@ -35,11 +35,11 @@ fn test_it_can_get_ip_v6_from_request() {
 
     header.set_custom('RemoteAddr', expected)!
 
-    base_request := Request{
-        header: header
+    request := web.Request{
+        Request{
+            header: header
+        }
     }
-
-    request := web.Request.from(base_request)
     request_ip := request.ip()!
 
     actual := match request_ip {
@@ -51,9 +51,11 @@ fn test_it_can_get_ip_v6_from_request() {
 }
 
 fn test_it_returns_header_not_found_error_when_header_not_present() {
-    request := web.Request.from(Request{
-        header: Header{}
-    })
+    request := web.Request{
+        Request{
+            header: Header{}
+        }
+    }
 
     mut error_matched := false
 

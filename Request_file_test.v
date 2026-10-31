@@ -11,7 +11,7 @@ fn test_it_can_get_first_txt_file_when_there_is_only_one_with_same_name() {
     file_content := fake.sentence()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(
@@ -42,7 +42,7 @@ fn test_it_can_get_first_txt_file_when_there_is_multiple_ones_with_same_name() {
     second_file_content := fake.sentence()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(
@@ -79,7 +79,7 @@ fn test_it_get_no_file_when_no_one_match_file_name() {
     second_file_content := fake.sentence()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(
@@ -117,7 +117,7 @@ Content-Type: application/json
 
 fn test_it_get_no_files_when_there_is_none() {
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(key: .content_type, value: Mime.application_json.str())

@@ -11,7 +11,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   theme := request.query("theme") or { "dark" }
 
@@ -99,7 +99,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   ip := request.ip() or {
     return web.Response.html(content: "<h1>Unable to find your IP.</h1>", status: .server_error)
@@ -142,7 +142,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   url := request.url // "/contact?theme=dark#whatsapp"
   path := request.path() // "/contact"
@@ -175,7 +175,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := Request.from_base(request)
+  request := Request{ request }
 
   accepted_content_types := request.accepted_content_types()
 
@@ -211,7 +211,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := Request.from_base(request)
+  request := Request{ request }
 
   return match request.accepts(.text_html) {
     true { web.Response.html(content: "<h1>Hello world</h1>") }
@@ -244,7 +244,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := Request.from_base(request)
+  request := Request{ request }
 
   type = match request.content_type() {
     .text_html { "html" }
@@ -277,7 +277,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := Request.from_base(request)
+  request := Request{ request }
 
   session := request.cookie("session") or { "" }
 
@@ -307,7 +307,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := Request.from_base(request)
+  request := Request{ base_request }
 
   for key, value in request.cookies() {
     // ...
@@ -342,7 +342,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   theme := request.query("theme") or { "dark" }
 
@@ -370,7 +370,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   theme := match request.query("theme") or {
     match err {
@@ -404,7 +404,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   theme := match request.query("theme") or {
     match err {
@@ -445,7 +445,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   for key, value in request.queries() {
     // ...
@@ -483,7 +483,7 @@ import os
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   // GET /upload-profile-picture
   if request.path() == '/upload-profile-picture' {
@@ -540,7 +540,7 @@ import os
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   // GET /upload-documents
   if request.path() == '/upload-documents' {
@@ -599,7 +599,7 @@ import os
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   // GET /upload-documents
   if request.path() == '/upload-documents' {
@@ -649,7 +649,7 @@ import khalyomede.mime { Mime }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   email := request.body(key: "email") or { "" }
 
@@ -679,7 +679,7 @@ import khalyomede.mime { Mime }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   for key, value in request.all_body() {
     // ...
@@ -710,7 +710,7 @@ import net.http { Server, Handler, Request, Response, Status }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   for key, value in request.headers() {
     // ...
@@ -741,7 +741,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   client_id := request.header(key: "X-Client-Id")
 
@@ -768,7 +768,7 @@ import net.http { CommonHeader, Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   forwarded_host := request.header(key: CommonHeader.x_forwarded_host)
 
@@ -798,7 +798,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   bearer_token := request.bearer_token() or { "" }
 
@@ -828,7 +828,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   username, password := request.basic_auth() or { "", "" }
 
@@ -858,7 +858,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   user_agent := request.user_agent() or { "Google Chrome v110" }
 
@@ -890,7 +890,7 @@ import net.http { Server, Handler, Request, Response }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   language := request.language() or { Lang.en }
 
@@ -923,7 +923,7 @@ import khalyomede.lang { Lang }
 struct RequestHandler implements Handler {}
 
 fn (request_handler RequestHandler) handle(base_request Request) Response {
-  request := web.Request.from_base(base_request)
+  request := web.Request{ base_request }
 
   languages := request.languages()
 

@@ -8,7 +8,7 @@ import web
 
 fn test_it_can_get_application_json_content_type_from_request() {
     request := web.Request{
-        base_request: Request{
+        Request{
             method: .post
             url: "/login"
             header: new_header(key: .content_type, value: Mime.application_json.str())
@@ -23,7 +23,7 @@ fn test_it_can_get_multipart_form_data_content_type_from_request() {
     file_content := fake.sentence()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(

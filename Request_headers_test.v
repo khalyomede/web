@@ -16,7 +16,7 @@ fn test_it_returns_all_headers_from_request() {
     header.add_custom("X-Client-Id", x_client_id)!
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: header
         }
     }
@@ -29,7 +29,7 @@ fn test_it_returns_all_headers_from_request() {
 
 fn test_it_return_no_header_if_request_contains_none() {
     request := web.Request{
-        base_request: Request{
+        Request{
             header: Header{}
         }
     }

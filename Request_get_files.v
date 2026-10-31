@@ -9,7 +9,7 @@ fn (request Request) get_files() map[string][]FileData {
 
     return match content_type {
         .multipart_form_data {
-            raw_content_type := request.base_request.header.get(.content_type) or {
+            raw_content_type := request.header.get(.content_type) or {
                 return map[string][]FileData{}
             }
 
@@ -26,7 +26,7 @@ fn (request Request) get_files() map[string][]FileData {
                 return map[string][]FileData{}
             }
 
-            _, list_of_file_data := parse_multipart_form(request.base_request.data, trimmed_boundary)
+            _, list_of_file_data := parse_multipart_form(request.data, trimmed_boundary)
 
             for name, file_data_files in list_of_file_data {
                 mut all_files := []FileData{}

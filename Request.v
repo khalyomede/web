@@ -1,13 +1,7 @@
 module web
 
-import net.http { Method }
+import net.http
 
-/**
-  @todo Just use struct inheritance.
-**/
 pub struct Request {
-    pub:
-        method Method
-        url string
-        base_request http.Request
+    http.Request
 }

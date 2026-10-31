@@ -13,7 +13,7 @@ fn test_it_can_get_basic_auth_from_header() {
     basic_authorization := base64.encode_str("${username}:${password}")
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Basic ${basic_authorization}")
         }
     }
@@ -31,7 +31,7 @@ fn test_it_cannot_get_basic_auth_from_header_when_it_is_not_correctly_base64_enc
     basic_authorization := "${username}:${password}"
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Basic ${basic_authorization}")
         }
     }
@@ -49,7 +49,7 @@ fn test_it_cannot_get_basic_auth_when_username_is_missing() {
     basic_authorization := base64.encode_str(":${password}")
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Basic ${basic_authorization}")
         }
     }
@@ -67,7 +67,7 @@ fn test_it_cannot_get_basic_auth_when_password_is_missing() {
     basic_authorization := base64.encode_str("${username}:")
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Basic ${basic_authorization}")
         }
     }
@@ -85,7 +85,7 @@ fn test_it_cannot_get_basic_auth_when_username_contains_colon() {
     basic_authorization := base64.encode_str("${username}:${password}")
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Basic ${basic_authorization}")
         }
     }
@@ -100,7 +100,7 @@ fn test_it_cannot_get_basic_auth_when_username_and_password_are_missing() {
     mut fake := Faker{}
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Basic ")
         }
     }
@@ -115,7 +115,7 @@ fn test_it_cannot_get_basic_auth_when_no_header_is_found() {
     mut fake := Faker{}
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: Header{}
         }
     }

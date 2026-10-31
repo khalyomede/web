@@ -1,7 +1,7 @@
 module web
 
 pub fn (request Request) cookie(key string) ?string {
-    cookie_value := request.base_request.header.get(.cookie) or {
+    cookie_value := request.header.get(.cookie) or {
         return none
     }
 

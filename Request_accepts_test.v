@@ -6,7 +6,7 @@ import web
 
 fn test_it_returns_true_if_request_accepts_text_html() {
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .accept, value: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
         }
     }
@@ -16,7 +16,7 @@ fn test_it_returns_true_if_request_accepts_text_html() {
 
 fn test_it_returns_true_if_request_doesnt_accept_application_json() {
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .accept, value: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
         }
     }

@@ -10,7 +10,7 @@ fn test_it_can_get_user_agent_from_header() {
     user_agent := fake.user_agent()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .user_agent, value: user_agent)
         }
     }
@@ -20,7 +20,7 @@ fn test_it_can_get_user_agent_from_header() {
 
 fn test_it_get_no_user_agent_when_not_present_in_header() {
     request := web.Request{
-        base_request: Request{
+        Request{
             header: Header{}
         }
     }

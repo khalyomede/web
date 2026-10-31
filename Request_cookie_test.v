@@ -6,7 +6,7 @@ import web
 
 fn test_it_get_single_cookie_from_request() {
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/"
             method: .post,
             header: new_custom_header_from_map({
@@ -22,7 +22,7 @@ fn test_it_get_single_cookie_from_request() {
 
 fn test_it_finds_no_cookie_from_requets_when_key_is_not_set() {
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/"
             method: .post,
             header: new_custom_header_from_map({
@@ -38,7 +38,7 @@ fn test_it_finds_no_cookie_from_requets_when_key_is_not_set() {
 
 fn test_it_finds_no_cookie_from_requets_when_no_cookie_is_set() {
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/"
             method: .post,
         }

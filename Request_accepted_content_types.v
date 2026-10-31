@@ -3,7 +3,7 @@ module web
 import khalyomede.mime { Mime }
 
 pub fn (request Request) accepted_content_types() []Mime {
-    accept := request.base_request.header.get(.accept) or {
+    accept := request.header.get(.accept) or {
         return []Mime{}
      }
 

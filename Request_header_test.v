@@ -14,7 +14,7 @@ fn test_it_can_get_custom_header() {
     header_value := fake.u8().str()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_custom_header_from_map({
                 header_key: header_value
             }) or { Header{} }
@@ -29,7 +29,7 @@ fn test_it_can_get_common_header() {
     referer := fake.base_url()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .referer, value: referer)
         }
     }
@@ -39,7 +39,7 @@ fn test_it_can_get_common_header() {
 
 fn test_it_returns_nothing_if_header_not_found() {
     request := web.Request{
-        base_request: Request{
+        Request{
             header: Header{}
         }
     }

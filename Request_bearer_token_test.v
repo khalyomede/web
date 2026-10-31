@@ -10,7 +10,7 @@ fn test_it_can_get_bearer_token_from_request() {
     token := fake.u8().str()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Bearer ${token}")
         }
     }
@@ -23,7 +23,7 @@ fn test_it_returns_nothing_if_authorization_header_not_found() {
     token := fake.u8().str()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: Header{}
         }
     }
@@ -36,7 +36,7 @@ fn test_it_returns_nothing_if_authorization_header_is_bearer_with_empty_token() 
     token := fake.u8().str()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Bearer ")
         }
     }
@@ -49,7 +49,7 @@ fn test_it_returns_nothing_if_authorization_header_is_basic_auth() {
     token := fake.u8().str()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "Basic base64")
         }
     }
@@ -62,7 +62,7 @@ fn test_it_returns_nothing_if_authorization_header_doesnt_have_auth_scheme() {
     token := fake.u8().str()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             header: new_header(key: .authorization, value: "${token}")
         }
     }

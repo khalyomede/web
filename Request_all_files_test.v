@@ -27,7 +27,7 @@ ${file_content}
     }
 
     request := web.Request{
-        base_request: base_request
+        base_request
     }
 
     files := request.all_files()
@@ -45,7 +45,7 @@ fn test_it_can_get_all_txt_files_uploaded_when_there_is_multiple_ones() {
     second_file_content := '{"title": "2026_revenues"}'
 
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(
@@ -88,7 +88,7 @@ ${second_file_content}
 
 fn test_it_can_get_all_txt_files_uploaded_when_there_is_none() {
     request := web.Request{
-        base_request: Request{
+        Request{
             url: "/upload"
             method: .post
             header: new_header(key: .content_type, value: Mime.application_json.str())

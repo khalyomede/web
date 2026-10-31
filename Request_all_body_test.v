@@ -12,7 +12,7 @@ fn test_it_can_get_all_key_values_from_form() {
     password := fake.word()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             method: .post
             header: new_header(key: .content_type, value: Mime.text_html.str())
             data: "email=${email}&password=${password}"
@@ -28,7 +28,7 @@ fn test_it_can_all_key_values_from_a_json_key() {
     password := fake.word()
 
     request := web.Request{
-        base_request: Request{
+        Request{
             method: .post
             header: new_header(key: .content_type, value: Mime.application_json.str())
             data: '{"email": "${email}", "password": "${password}"}'
